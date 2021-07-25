@@ -150,6 +150,6 @@ class ModeloController extends Controller
         Storage::disk('public')->delete($modelo->imagem);
 
         $modelo->delete();
-        return response()->json(['msg' => 'A marca foi excluída com sucesso'], 200);
+        return response()->json(['msg' => 'O modelo foi excluída com sucesso'], 200);
     }
 }
