@@ -18,10 +18,14 @@ class Marca extends Model
     }
 
     public function feedback() {
-            return [
-                'required' => 'O campo :attribute precisa ser preenchido',
-                'imagem.mimes' => 'O tipo de imagem deve ser PNG',
-                'nome.unique' => 'O nome da marca já existe'
-            ];
+        return [
+            'required' => 'O campo :attribute precisa ser preenchido',
+            'imagem.mimes' => 'O tipo de imagem deve ser PNG',
+            'nome.unique' => 'O nome da marca já existe'
+        ];
+    }
+
+    public function modelos() {
+        return $this->hasMany('App\Models\Modelo');
     }
 }
