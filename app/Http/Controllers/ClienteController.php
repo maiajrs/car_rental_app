@@ -3,18 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Repositories\ClienteRepository;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+    public function __construct(Cliente $cliente)
+    {
+        $this->cliente = $cliente;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $clienteRepository = new ClienteRepository($this->cliente);
+
+        if ($request->has('filtro')) {
+            $clienteRepository->filtro($request->filtro);
+        }
+
+        if ($request->has('atributos')) {
+            $clienteRepository->selectAtributos($request->atributos);
+        }
+
+        return response()->json($clienteRepository->getAtributos(), 200);
     }
 
     /**
@@ -25,18 +41,28 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->cliente->rules());
+
+        $cliente = $this->cliente->create([
+            'nome' => $request->nome,
+        ]);
+
+        return response()->json($cliente, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  Integer
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show($id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+        if ($cliente === null) {
+            return response()->json(['erro' => 'O registro solicitado não existe'], 404);
+        }
+        return response()->json($cliente, 200);
     }
 
     /**
@@ -46,9 +72,38 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request,  $id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+
+        if ($cliente === null) {
+            return response()->json(['erro' => 'Não foi possível realizar a atualização. Registro inexistente'], 404);
+        }
+
+        if ($request->method() === 'PATCH') {
+            $regrasDinamicas = array();
+
+            foreach($cliente->rules() as $input => $regra) {
+                if (array_key_exists($input, $request->all())) {
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+
+            $request->validate($regrasDinamicas);
+
+        } else {
+            $request->validate($cliente->rules());
+        }
+
+        $cliente->fill($request->all());
+        $cliente->save();
+
+        // $cliente->update([
+        //     'nome' => $request->nome,
+        //     'imagem' => $imagem_urn
+        // ]);
+
+        return response()->json($cliente, 200);
     }
 
     /**
@@ -57,8 +112,16 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy($id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+
+        if ($cliente === null) {
+            return response()->json(['erro' => 'Não foi possível realizar a exclusão. Registro inexistente'], 404);
+        }
+
+
+        $cliente->delete();
+        return response()->json(['msg' => 'O cliente foi excluído com sucesso'], 200);
     }
 }
