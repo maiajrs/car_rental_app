@@ -4,9 +4,9 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Login (Component Vue)</div>
-
                     <div class="card-body">
-                        <form method="POST" action="">
+                        <form method="POST" action="" @submit.prevent="login($event)">
+                            <input type="hidden" name="_token" :value="token_csrf">
                             <div class="form-group row">
                                 <label
                                     for="email"
@@ -22,6 +22,7 @@
                                         required
                                         autocomplete="email"
                                         autofocus
+                                        v-model="email"
                                     />
                                 </div>
                             </div>
@@ -39,6 +40,7 @@
                                         name="password"
                                         required
                                         autocomplete="current-password"
+                                        v-model="password"
                                     />
                                 </div>
                             </div>
@@ -74,4 +76,36 @@
     </div>
 </template>
 
-<script></script>
+<script>
+    export default {
+        props: ['token_csrf'],
+        data() {
+            return {
+                email: '',
+                password: ''
+            }
+        },
+        methods: {
+            login(e) {
+                let url = 'http://127.0.0.1:8000/api/login'
+                let configuracoes = {
+                    method: 'post',
+                    body: new URLSearchParams({
+                        email: this.email,
+                        password: this.password
+                    })
+                }
+
+                fetch(url, configuracoes)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.token) {
+                            document.cookie = 'token=' + data.token + ';SameSite=Lax'
+                        }
+                        e.target.submit()
+                    })
+            }
+        },
+
+    }
+</script>
