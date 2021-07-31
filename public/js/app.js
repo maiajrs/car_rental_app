@@ -38017,10 +38017,87 @@ var staticRenderFns = [
       _c("div", { staticClass: "row justify-content-center" }, [
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Marcas")]),
+            _c("div", { staticClass: "card-header" }, [
+              _vm._v("Buscar de Marcas")
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
-              _c("p", [_vm._v("Apresentar as marcas aqui!")])
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-6 mb-3" }, [
+                  _c(
+                    "label",
+                    { staticClass: "form-label", attrs: { for: "inputID" } },
+                    [_vm._v("ID")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "email",
+                      id: "inputID",
+                      "aria-describedby": "helpID"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-text text-muted",
+                      attrs: { id: "helpID" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                               Opcional. Informe o ID do registro.\n                            "
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-6 mb-3" }, [
+                  _c(
+                    "label",
+                    { staticClass: "form-label", attrs: { for: "inputNome" } },
+                    [_vm._v("Nome")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "email",
+                      id: "inputNome",
+                      "aria-describedby": "helpNome"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-text text-muted",
+                      attrs: { id: "helpNome" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                Opcional. Informe o nome da marca.\n                            "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary float-right",
+                  attrs: { type: "submit" }
+                },
+                [
+                  _vm._v(
+                    "\n                        Pesquisar\n                    "
+                  )
+                ]
+              )
             ])
           ])
         ])
