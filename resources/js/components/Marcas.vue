@@ -61,6 +61,8 @@
                             type="button"
                             class="btn btn-primary float-right"
                             name="rodape"
+                            data-toggle="modal"
+                            data-target="#modalMarcas"
                         >
                             Adicionar
                         </button>
@@ -68,5 +70,6 @@
                 </card-component>
             </div>
         </div>
+        <modal-component id="modalMarcas" titulo="Adicionar marca"></modal-component>
     </div>
 </template>
