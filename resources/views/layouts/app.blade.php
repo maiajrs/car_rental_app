@@ -32,9 +32,27 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                        @auth
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Clientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Locações</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Veículos</a>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item">Carros</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{{route('marcas')}}" class="dropdown-item">Marcas</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item">Modelos</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        @endauth
 
-                    </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -74,6 +92,15 @@
                 </div>
             </div>
         </nav>
+
+        @auth
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{Route::currentRouteName()}}</li>
+                </ol>
+            </nav>
+        @endauth
 
         <main class="py-4">
             @yield('content')
