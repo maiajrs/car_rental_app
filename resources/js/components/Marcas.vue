@@ -77,7 +77,7 @@
                         id="novoNome"
                         titulo="Nome da marca"
                         id-help="novoNomeHelp"
-                        text-help="Informe o da marca."
+                        text-help="Informe o nome da marca."
                     >
                         <input
                             type="text"
@@ -85,7 +85,9 @@
                             id="novoNome"
                             aria-describedby="novoNomeHelp"
                             placeholder="Nome da marca"
+                            v-model="nomeMarca"
                         />
+                        {{ nomeMarca }}
                     </input-container-component>
                 </div>
                 <div class="form-group">
@@ -101,7 +103,9 @@
                             id="novoImagem"
                             aria-describedby="novoImagemHelp"
                             placeholder="Selecione uma imagem"
+                            @change="carregarImagem($event)"
                         />
+                        {{ arquivoImagem[0] }}
                     </input-container-component>
                 </div>
             </template>
@@ -113,10 +117,59 @@
                 >
                     Fechar
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" @click="salvar()">
                     Salvar
                 </button>
             </template>
         </modal-component>
     </div>
 </template>
+
+<script>
+export default {
+    computed: {
+        token() {
+            let token = document.cookie.split(';').find(indice => {
+                if (indice.includes('token=')) {
+                    return indice
+                }
+            })
+            token = 'Bearer ' + token.replace('token=', '')
+            return token
+        }
+    },
+    data() {
+        return {
+            baseURL: 'http://localhost:8000/api/v1/marca',
+            nomeMarca: "",
+            arquivoImagem: []
+        };
+    },
+    methods: {
+        carregarImagem(e) {
+            this.arquivoImagem = e.target.files
+        },
+        salvar() {
+            let formData = new FormData()
+            formData.append('nome', this.nomeMarca)
+            formData.append('imagem', this.arquivoImagem[0])
+
+            let configs = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json',
+                    'Authorization': this.token
+                }
+            }
+
+            axios.post(this.baseURL, formData, configs)
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(errors => {
+                    console.log(errors)
+                })
+        }
+    },
+};
+</script>
