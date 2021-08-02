@@ -71,6 +71,21 @@
             </div>
         </div>
         <modal-component id="modalMarcas" titulo="Adicionar marca">
+            <template v-slot:alertas>
+                <alert-component
+                    :detalhes="transacaoDetalhes"
+                    titulo="O registro foi inserido com sucesso"
+                    tipo="success"
+                    v-if="transacaoStatus == 'adicionado'"
+                ></alert-component>
+                <alert-component
+                    :detalhes="transacaoDetalhes"
+                    titulo="Um erro ocorreu ao fazer o registro"
+                    tipo="danger"
+                    v-if="transacaoStatus == 'erro'"
+                ></alert-component>
+            </template>
+
             <template v-slot:conteudo>
                 <div class="form-group">
                     <input-container-component
@@ -129,47 +144,52 @@
 export default {
     computed: {
         token() {
-            let token = document.cookie.split(';').find(indice => {
-                if (indice.includes('token=')) {
-                    return indice
+            let token = document.cookie.split(";").find(indice => {
+                if (indice.includes("token=")) {
+                    return indice;
                 }
-            })
-            token = 'Bearer ' + token.replace('token=', '')
-            return token
+            });
+            token = "Bearer " + token?.replace("token=", "");
+            return token;
         }
     },
     data() {
         return {
-            baseURL: 'http://localhost:8000/api/v1/marca',
+            baseURL: "http://localhost:8000/api/v1/marca",
             nomeMarca: "",
-            arquivoImagem: []
+            arquivoImagem: [],
+            transacaoStatus: "",
+            transacaoDetalhes: []
         };
     },
     methods: {
         carregarImagem(e) {
-            this.arquivoImagem = e.target.files
+            this.arquivoImagem = e.target.files;
         },
         salvar() {
-            let formData = new FormData()
-            formData.append('nome', this.nomeMarca)
-            formData.append('imagem', this.arquivoImagem[0])
+            let formData = new FormData();
+            formData.append("nome", this.nomeMarca);
+            formData.append("imagem", this.arquivoImagem[0]);
 
             let configs = {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Accept': 'application/json',
-                    'Authorization': this.token
+                    "Content-Type": "multipart/form-data",
+                    Accept: "application/json",
+                    Authorization: this.token
                 }
-            }
+            };
 
-            axios.post(this.baseURL, formData, configs)
+            axios
+                .post(this.baseURL, formData, configs)
                 .then(res => {
-                    console.log(res)
+                    this.transacaoStatus = "adicionado";
+                    this.transacaoDetalhes = res;
                 })
                 .catch(errors => {
-                    console.log(errors)
-                })
+                    this.transacaoStatus = "erro";
+                    this.transacaoDetalhes = errors.response;
+                });
         }
-    },
+    }
 };
 </script>
