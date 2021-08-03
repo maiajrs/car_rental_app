@@ -183,11 +183,17 @@ export default {
                 .post(this.baseURL, formData, configs)
                 .then(res => {
                     this.transacaoStatus = "adicionado";
-                    this.transacaoDetalhes = res;
+                    this.transacaoDetalhes = {
+                        message: 'ID do registro inserido: ' + res.data.id
+                    }
+                    console.log(res.data.id)
                 })
                 .catch(errors => {
                     this.transacaoStatus = "erro";
-                    this.transacaoDetalhes = errors.response;
+                    this.transacaoDetalhes = {
+                        message: errors.response.data.message,
+                        dados: errors.response.data.errors
+                    }
                 });
         }
     }
