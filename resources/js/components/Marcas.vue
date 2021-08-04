@@ -163,6 +163,22 @@ export default {
         };
     },
     methods: {
+        carregarLista() {
+            let config = {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: this.token
+                }
+            };
+            axios
+                .get(this.baseURL, config)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+        },
         carregarImagem(e) {
             this.arquivoImagem = e.target.files;
         },
@@ -184,18 +200,22 @@ export default {
                 .then(res => {
                     this.transacaoStatus = "adicionado";
                     this.transacaoDetalhes = {
-                        message: 'ID do registro inserido: ' + res.data.id
-                    }
-                    console.log(res.data.id)
+                        message: "ID do registro inserido: " + res.data.id
+                    };
+                    console.log(res.data.id);
                 })
                 .catch(errors => {
                     this.transacaoStatus = "erro";
                     this.transacaoDetalhes = {
                         message: errors.response.data.message,
                         dados: errors.response.data.errors
-                    }
+                    };
                 });
         }
+    },
+    mounted() {
+        this.carregarLista()
     }
+
 };
 </script>
