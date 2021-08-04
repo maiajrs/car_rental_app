@@ -54,7 +54,7 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" :titulo="['ID', 'Nome', 'Imagem']"></table-component>
+                        <table-component :dados="marcas" :titulo="['id', 'nome', 'imagem']"></table-component>
                     </template>
                     <template v-slot:rodape>
                         <button
