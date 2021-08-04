@@ -54,7 +54,7 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component></table-component>
+                        <table-component :dados="marcas" :titulo="['ID', 'Nome', 'Imagem']"></table-component>
                     </template>
                     <template v-slot:rodape>
                         <button
@@ -159,7 +159,8 @@ export default {
             nomeMarca: "",
             arquivoImagem: [],
             transacaoStatus: "",
-            transacaoDetalhes: []
+            transacaoDetalhes: [],
+            marcas: []
         };
     },
     methods: {
@@ -173,7 +174,7 @@ export default {
             axios
                 .get(this.baseURL, config)
                 .then(response => {
-                    console.log(response);
+                    this.marcas = response.data
                 })
                 .catch(errors => {
                     console.log(errors);
