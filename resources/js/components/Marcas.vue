@@ -54,7 +54,12 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component></table-component>
+                        <table-component :dados="marcas" :titulo="{
+                            id: {titulo: 'ID', tipo: 'texto'},
+                            nome: {titulo: 'Nome', tipo: 'texto'},
+                            imagem: {titulo: 'Imagem', tipo: 'imaem'},
+                            created_at: {titulo: 'Data de criação', tipo: 'data'},
+                        }"></table-component>
                     </template>
                     <template v-slot:rodape>
                         <button
@@ -159,10 +164,27 @@ export default {
             nomeMarca: "",
             arquivoImagem: [],
             transacaoStatus: "",
-            transacaoDetalhes: []
+            transacaoDetalhes: [],
+            marcas: []
         };
     },
     methods: {
+        carregarLista() {
+            let config = {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: this.token
+                }
+            };
+            axios
+                .get(this.baseURL, config)
+                .then(response => {
+                    this.marcas = response.data
+                })
+                .catch(errors => {
+                    console.log(errors);
+                });
+        },
         carregarImagem(e) {
             this.arquivoImagem = e.target.files;
         },
@@ -184,18 +206,22 @@ export default {
                 .then(res => {
                     this.transacaoStatus = "adicionado";
                     this.transacaoDetalhes = {
-                        message: 'ID do registro inserido: ' + res.data.id
-                    }
-                    console.log(res.data.id)
+                        message: "ID do registro inserido: " + res.data.id
+                    };
+                    console.log(res.data.id);
                 })
                 .catch(errors => {
                     this.transacaoStatus = "erro";
                     this.transacaoDetalhes = {
                         message: errors.response.data.message,
                         dados: errors.response.data.errors
-                    }
+                    };
                 });
         }
+    },
+    mounted() {
+        this.carregarLista()
     }
+
 };
 </script>

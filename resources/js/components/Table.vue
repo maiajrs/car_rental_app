@@ -2,29 +2,27 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th
+                    v-for="(t, key) in titulo"
+                    :key="key"
+                    scope="col"
+                    class="text-uppercase"
+                >
+                    {{ t.titulo }}
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
+            <tr v-for="obj, chave in dadosFiltrados" :key="chave">
+                <td v-for="valor, chaveValor in obj" :key="chaveValor">
+                    <span v-if="chaveValor == 'imagem'">
+                        <img width="30" height="30" :src="'/storage/'+valor" :alt="'imagem do carro ' + valor">
+                    </span>
+                    <span v-else-if="chaveValor == 'created_at'">
+                        {{}}
+                    </span>
+                    <span v-else>{{valor}}</span>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -32,15 +30,21 @@
 
 <script>
 export default {
-    props: [],
-    methods: {
-        buscar() {
-            let url = 'http://localhost:8000/api/v1/marca'
-            let configuracoes = {
-                Headers: {
-                    Authorization: 'Bearer '
-                }
-            }
+    props: ["dados", "titulo"],
+    computed: {
+        dadosFiltrados() {
+            const keysTitulo = Object.keys(this.titulo)
+            const keysObjs = this.dados.map((obj) => {
+
+                let itemFiltrado = {}
+               keysTitulo.forEach((campo) => {
+                   itemFiltrado[campo] = obj[campo]
+               })
+
+               return itemFiltrado
+            })
+            console.log(keysObjs)
+            return keysObjs
         }
     }
 };
