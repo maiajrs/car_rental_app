@@ -2,24 +2,27 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th v-for="(t, key) in titulo" :key="key" scope="col" class="text-uppercase">
-                    {{ t }}
+                <th
+                    v-for="(t, key) in titulo"
+                    :key="key"
+                    scope="col"
+                    class="text-uppercase"
+                >
+                    {{ t.titulo }}
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="obj in dados" :key="obj.id">
-                <td v-if="titulo.includes(chave)" v-for="(valor, chave) in obj" :key="chave">
-                    <span v-if="chave == 'imagem'">
-                        <img :src="'/storage/'+valor" height="30" width="30" :alt="'imagem do carro '+obj.nome">
+            <tr v-for="obj, chave in dadosFiltrados" :key="chave">
+                <td v-for="valor, chaveValor in obj" :key="chaveValor">
+                    <span v-if="chaveValor == 'imagem'">
+                        <img width="30" height="30" :src="'/storage/'+valor" :alt="'imagem do carro ' + valor">
                     </span>
-                    <span v-else>
-                        {{valor}}
+                    <span v-else-if="chaveValor == 'created_at'">
+                        {{}}
                     </span>
+                    <span v-else>{{valor}}</span>
                 </td>
-                <!-- <th scope="row">{{m.id}}</th>
-                <td>{{m.nome}}</td>
-                <td><img width="30" height="30" :src="'storage/'+m.imagem" :alt="m.nome"></td> -->
             </tr>
         </tbody>
     </table>
@@ -27,6 +30,22 @@
 
 <script>
 export default {
-    props: ["dados", "titulo"]
+    props: ["dados", "titulo"],
+    computed: {
+        dadosFiltrados() {
+            const keysTitulo = Object.keys(this.titulo)
+            const keysObjs = this.dados.map((obj) => {
+
+                let itemFiltrado = {}
+               keysTitulo.forEach((campo) => {
+                   itemFiltrado[campo] = obj[campo]
+               })
+
+               return itemFiltrado
+            })
+            console.log(keysObjs)
+            return keysObjs
+        }
+    }
 };
 </script>
