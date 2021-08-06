@@ -13,16 +13,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="obj, chave in dadosFiltrados" :key="chave">
-                <td v-for="valor, chaveValor in obj" :key="chaveValor">
+            <tr v-for="(obj, chave) in dadosFiltrados" :key="chave">
+                <td v-for="(valor, chaveValor) in obj" :key="chaveValor">
                     <span v-if="titulos[chaveValor].tipo == 'texto'">
-                        {{valor}}
+                        {{ valor }}
                     </span>
                     <span v-if="titulos[chaveValor].tipo == 'data'">
-                        {{'...'+valor}}
+                        {{ "..." + valor }}
                     </span>
                     <span v-if="titulos[chaveValor].tipo == 'imagem'">
-                        <img width="30" height="30" :src="'/storage/'+valor" :alt="'imagem do carro ' + obj.nome">
+                        <img
+                            width="30"
+                            height="30"
+                            :src="'/storage/' + valor"
+                            :alt="'imagem do carro ' + obj.nome"
+                        />
                     </span>
                 </td>
             </tr>
@@ -35,17 +40,18 @@ export default {
     props: ["dados", "titulos"],
     computed: {
         dadosFiltrados() {
-            const keysTitulo = Object.keys(this.titulos)
-            const keysObjs = this.dados?.map((obj) => {
+            let campos = Object.keys(this.titulos);
+            let dadosFiltrados = [];
 
-                let itemFiltrado = {}
-               keysTitulo.forEach((campo) => {
-                   itemFiltrado[campo] = obj[campo]
-               })
+            this.dados.map((item, chave) => {
+                let itemFiltrado = {};
+                campos.forEach(campo => {
+                    itemFiltrado[campo] = item[campo];
+                });
 
-               return itemFiltrado
-            })
-            return keysObjs
+                dadosFiltrados.push(itemFiltrado)
+            });
+            return dadosFiltrados;
         }
     }
 };

@@ -54,23 +54,45 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas.data" :titulos="{
-                            id: {titulo: 'ID', tipo: 'texto'},
-                            nome: {titulo: 'Nome', tipo: 'texto'},
-                            imagem: {titulo: 'Imagem', tipo: 'imagem'},
-                            created_at: {titulo: 'Data de criação', tipo: 'data'},
-                        }"></table-component>
+                        <table-component
+                            :dados="marcas.data"
+                            :titulos="{
+                                id: { titulo: 'ID', tipo: 'texto' },
+                                nome: { titulo: 'Nome', tipo: 'texto' },
+                                imagem: { titulo: 'Imagem', tipo: 'imagem' },
+                                created_at: {
+                                    titulo: 'Data de criação',
+                                    tipo: 'data'
+                                }
+                            }"
+                        ></table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button
-                            type="button"
-                            class="btn btn-primary float-right"
-                            name="rodape"
-                            data-toggle="modal"
-                            data-target="#modalMarcas"
-                        >
-                            Adicionar
-                        </button>
+                        <div class="row">
+                            <div class="col-10">
+                                <paginate-component>
+                                    <template v-slot:links>
+                                        <li v-for="l, key in marcas.links" :key="key" class="page-item">
+                                        <a class="page-link" :href="l.url" v-html="l.label"
+                                            ></a
+                                        >
+                                    </li>
+                                    </template>
+
+                                </paginate-component>
+                            </div>
+                            <div class="col">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary float-right"
+                                    name="rodape"
+                                    data-toggle="modal"
+                                    data-target="#modalMarcas"
+                                >
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
             </div>
@@ -165,7 +187,7 @@ export default {
             arquivoImagem: [],
             transacaoStatus: "",
             transacaoDetalhes: [],
-            marcas: []
+            marcas: { data: [] }
         };
     },
     methods: {
@@ -179,11 +201,10 @@ export default {
             axios
                 .get(this.baseURL, config)
                 .then(response => {
-                    this.marcas = response.data
-                    console.log(this.marcas)
+                    this.marcas = response.data;
+                    console.log(this.marcas);
                 })
-                .catch(errors => {
-                });
+                .catch(errors => {});
         },
         carregarImagem(e) {
             this.arquivoImagem = e.target.files;
@@ -220,8 +241,7 @@ export default {
         }
     },
     mounted() {
-        this.carregarLista()
+        this.carregarLista();
     }
-
 };
 </script>
