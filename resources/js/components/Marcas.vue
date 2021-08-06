@@ -54,10 +54,10 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" :titulo="{
+                        <table-component :dados="marcas.data" :titulos="{
                             id: {titulo: 'ID', tipo: 'texto'},
                             nome: {titulo: 'Nome', tipo: 'texto'},
-                            imagem: {titulo: 'Imagem', tipo: 'imaem'},
+                            imagem: {titulo: 'Imagem', tipo: 'imagem'},
                             created_at: {titulo: 'Data de criação', tipo: 'data'},
                         }"></table-component>
                     </template>
@@ -180,6 +180,7 @@ export default {
                 .get(this.baseURL, config)
                 .then(response => {
                     this.marcas = response.data
+                    console.log(this.marcas)
                 })
                 .catch(errors => {
                 });

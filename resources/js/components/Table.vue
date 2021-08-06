@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th
-                    v-for="(t, key) in titulo"
+                    v-for="(t, key) in titulos"
                     :key="key"
                     scope="col"
                     class="text-uppercase"
@@ -15,13 +15,15 @@
         <tbody>
             <tr v-for="obj, chave in dadosFiltrados" :key="chave">
                 <td v-for="valor, chaveValor in obj" :key="chaveValor">
-                    <span v-if="chaveValor == 'imagem'">
-                        <img width="30" height="30" :src="'/storage/'+valor" :alt="'imagem do carro ' + valor">
+                    <span v-if="titulos[chaveValor].tipo == 'texto'">
+                        {{valor}}
                     </span>
-                    <span v-else-if="chaveValor == 'created_at'">
-                        {{}}
+                    <span v-if="titulos[chaveValor].tipo == 'data'">
+                        {{'...'+valor}}
                     </span>
-                    <span v-else>{{valor}}</span>
+                    <span v-if="titulos[chaveValor].tipo == 'imagem'">
+                        <img width="30" height="30" :src="'/storage/'+valor" :alt="'imagem do carro ' + obj.nome">
+                    </span>
                 </td>
             </tr>
         </tbody>
@@ -30,11 +32,11 @@
 
 <script>
 export default {
-    props: ["dados", "titulo"],
+    props: ["dados", "titulos"],
     computed: {
         dadosFiltrados() {
-            const keysTitulo = Object.keys(this.titulo)
-            const keysObjs = this.dados.map((obj) => {
+            const keysTitulo = Object.keys(this.titulos)
+            const keysObjs = this.dados?.map((obj) => {
 
                 let itemFiltrado = {}
                keysTitulo.forEach((campo) => {
