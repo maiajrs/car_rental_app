@@ -182,7 +182,6 @@ export default {
                     this.marcas = response.data
                 })
                 .catch(errors => {
-                    console.log(errors);
                 });
         },
         carregarImagem(e) {

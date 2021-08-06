@@ -43,7 +43,6 @@ export default {
 
                return itemFiltrado
             })
-            console.log(keysObjs)
             return keysObjs
         }
     }
