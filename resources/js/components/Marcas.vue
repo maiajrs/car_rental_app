@@ -71,14 +71,18 @@
                         <div class="row">
                             <div class="col-10">
                                 <paginate-component>
-                                    <template v-slot:links>
-                                        <li v-for="l, key in marcas.links" :key="key" class="page-item">
-                                        <a class="page-link" :href="l.url" v-html="l.label"
-                                            ></a
-                                        >
+                                    <li
+                                        v-for="(l, key) in marcas.links"
+                                        :key="key"
+                                        :class="l.active ? 'page-item active' : 'page-item'"
+                                        @click="paginacao(l)"
+                                    >
+                                        <a
+                                            class="page-link"
+                                            v-html="l.label"
+                                            style="cursor: pointer"
+                                        ></a>
                                     </li>
-                                    </template>
-
                                 </paginate-component>
                             </div>
                             <div class="col">
@@ -191,6 +195,12 @@ export default {
         };
     },
     methods: {
+        paginacao(l) {
+            this.baseURL = l.url;
+            if (l.url) {
+                this.carregarLista();
+            }
+        },
         carregarLista() {
             let config = {
                 headers: {
@@ -202,7 +212,6 @@ export default {
                 .get(this.baseURL, config)
                 .then(response => {
                     this.marcas = response.data;
-                    console.log(this.marcas);
                 })
                 .catch(errors => {});
         },
