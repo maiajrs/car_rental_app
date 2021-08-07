@@ -74,7 +74,11 @@
                                     <li
                                         v-for="(l, key) in marcas.links"
                                         :key="key"
-                                        :class="l.active ? 'page-item active' : 'page-item'"
+                                        :class="
+                                            l.active
+                                                ? 'page-item active'
+                                                : 'page-item'
+                                        "
                                         @click="paginacao(l)"
                                     >
                                         <a
@@ -213,8 +217,11 @@ export default {
                 .then(response => {
                     this.marcas = response.data;
                 })
-                .catch(errors => {});
+                .catch(errors => {
+                    console.log(errors);
+                });
         },
+
         carregarImagem(e) {
             this.arquivoImagem = e.target.files;
         },
