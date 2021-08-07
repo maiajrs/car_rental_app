@@ -28,6 +28,10 @@ class AbstractRepository {
         public function getAtributos() {
             return $this->model->get();
         }
+
+        public function getAtributosPaginated($qtd) {
+            return $this->model->paginate($qtd);
+        }
     }
 
 ?>

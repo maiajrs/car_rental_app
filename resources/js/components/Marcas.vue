@@ -54,23 +54,49 @@
                 <!-- inicio card de listagem -->
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" :titulo="{
-                            id: {titulo: 'ID', tipo: 'texto'},
-                            nome: {titulo: 'Nome', tipo: 'texto'},
-                            imagem: {titulo: 'Imagem', tipo: 'imaem'},
-                            created_at: {titulo: 'Data de criação', tipo: 'data'},
-                        }"></table-component>
+                        <table-component
+                            :dados="marcas.data"
+                            :titulos="{
+                                id: { titulo: 'ID', tipo: 'texto' },
+                                nome: { titulo: 'Nome', tipo: 'texto' },
+                                imagem: { titulo: 'Imagem', tipo: 'imagem' },
+                                created_at: {
+                                    titulo: 'Data de criação',
+                                    tipo: 'data'
+                                }
+                            }"
+                        ></table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button
-                            type="button"
-                            class="btn btn-primary float-right"
-                            name="rodape"
-                            data-toggle="modal"
-                            data-target="#modalMarcas"
-                        >
-                            Adicionar
-                        </button>
+                        <div class="row">
+                            <div class="col-10">
+                                <paginate-component>
+                                    <li
+                                        v-for="(l, key) in marcas.links"
+                                        :key="key"
+                                        :class="l.active ? 'page-item active' : 'page-item'"
+                                        @click="paginacao(l)"
+                                    >
+                                        <a
+                                            class="page-link"
+                                            v-html="l.label"
+                                            style="cursor: pointer"
+                                        ></a>
+                                    </li>
+                                </paginate-component>
+                            </div>
+                            <div class="col">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary float-right"
+                                    name="rodape"
+                                    data-toggle="modal"
+                                    data-target="#modalMarcas"
+                                >
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
             </div>
@@ -165,10 +191,16 @@ export default {
             arquivoImagem: [],
             transacaoStatus: "",
             transacaoDetalhes: [],
-            marcas: []
+            marcas: { data: [] }
         };
     },
     methods: {
+        paginacao(l) {
+            this.baseURL = l.url;
+            if (l.url) {
+                this.carregarLista();
+            }
+        },
         carregarLista() {
             let config = {
                 headers: {
@@ -179,11 +211,9 @@ export default {
             axios
                 .get(this.baseURL, config)
                 .then(response => {
-                    this.marcas = response.data
+                    this.marcas = response.data;
                 })
-                .catch(errors => {
-                    console.log(errors);
-                });
+                .catch(errors => {});
         },
         carregarImagem(e) {
             this.arquivoImagem = e.target.files;
@@ -220,8 +250,7 @@ export default {
         }
     },
     mounted() {
-        this.carregarLista()
+        this.carregarLista();
     }
-
 };
 </script>
