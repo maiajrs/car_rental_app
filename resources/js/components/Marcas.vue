@@ -19,6 +19,7 @@
                                         id="inputID"
                                         aria-describedby="helpID"
                                         placeholder="ID"
+                                        v-model="busca.id"
                                     />
                                 </input-container-component>
                             </div>
@@ -35,6 +36,7 @@
                                         id="inputNome"
                                         aria-describedby="helpNome"
                                         placeholder="Nome da Marca"
+                                        v-model="busca.nome"
                                     />
                                 </input-container-component>
                             </div>
@@ -44,6 +46,7 @@
                         <button
                             type="submit"
                             class="btn btn-primary float-right"
+                            @click="pesquisar()"
                         >
                             Pesquisar
                         </button>
@@ -191,21 +194,49 @@ export default {
     data() {
         return {
             baseURL: "http://localhost:8000/api/v1/marca",
+            urlPaginacao: '',
+            urlFiltro: '',
             nomeMarca: "",
             arquivoImagem: [],
             transacaoStatus: "",
             transacaoDetalhes: [],
-            marcas: { data: [] }
+            marcas: { data: [] },
+            busca: {
+                id: "",
+                nome: ""
+            }
         };
     },
     methods: {
+        pesquisar() {
+            let filtro = "";
+
+            for (let chave in this.busca) {
+                if (this.busca[chave]) {
+                    if (filtro != "") {
+                        filtro += ";";
+                    }
+                    filtro += chave + ":like:" + this.busca[chave];
+                }
+            }
+
+            if (filtro != '') {
+                this.urlPaginacao = 'page=1'
+                this.urlFiltro = '&filtro='+filtro
+            } else {
+                this.urlFiltro = ''
+            }
+            this.carregarLista()
+        },
         paginacao(l) {
-            this.baseURL = l.url;
+            let url = l.url.split('?')[1]
+            this.urlPaginacao = url
             if (l.url) {
                 this.carregarLista();
             }
         },
         carregarLista() {
+            let url = this.baseURL + '?' + this.urlPaginacao + this.urlFiltro
             let config = {
                 headers: {
                     Accept: "application/json",
@@ -213,7 +244,7 @@ export default {
                 }
             };
             axios
-                .get(this.baseURL, config)
+                .get(url, config)
                 .then(response => {
                     this.marcas = response.data;
                 })
