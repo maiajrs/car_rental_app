@@ -19,6 +19,7 @@
                                         id="inputID"
                                         aria-describedby="helpID"
                                         placeholder="ID"
+                                        v-model="busca.id"
                                     />
                                 </input-container-component>
                             </div>
@@ -35,6 +36,7 @@
                                         id="inputNome"
                                         aria-describedby="helpNome"
                                         placeholder="Nome da Marca"
+                                        v-model="busca.nome"
                                     />
                                 </input-container-component>
                             </div>
@@ -44,6 +46,7 @@
                         <button
                             type="submit"
                             class="btn btn-primary float-right"
+                            @click="pesquisar()"
                         >
                             Pesquisar
                         </button>
@@ -74,7 +77,11 @@
                                     <li
                                         v-for="(l, key) in marcas.links"
                                         :key="key"
-                                        :class="l.active ? 'page-item active' : 'page-item'"
+                                        :class="
+                                            l.active
+                                                ? 'page-item active'
+                                                : 'page-item'
+                                        "
                                         @click="paginacao(l)"
                                     >
                                         <a
@@ -191,10 +198,26 @@ export default {
             arquivoImagem: [],
             transacaoStatus: "",
             transacaoDetalhes: [],
-            marcas: { data: [] }
+            marcas: { data: [] },
+            busca: {
+                id: "",
+                nome: ""
+            }
         };
     },
     methods: {
+        pesquisar() {
+            let filtro = "";
+
+            for (let chave in this.busca) {
+                if (this.busca[chave]) {
+                    if (filtro != "") {
+                        filtro += ";";
+                    }
+                    filtro += chave + ":like:" + this.busca[chave];
+                }
+            }
+        },
         paginacao(l) {
             this.baseURL = l.url;
             if (l.url) {
