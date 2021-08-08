@@ -58,9 +58,9 @@
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
                         <table-component
-                            :visualizar="false"
-                            :atualizar="false"
-                            :remover="false"
+                            :visualizar="true"
+                            :atualizar="true"
+                            :remover="true"
                             :dados="marcas.data"
                             :titulos="{
                                 id: { titulo: 'ID', tipo: 'texto' },
@@ -111,6 +111,7 @@
                 </card-component>
             </div>
         </div>
+        <!-- inicio modal de inclusão de marcas -->
         <modal-component id="modalMarcas" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component
@@ -178,6 +179,23 @@
                 </button>
             </template>
         </modal-component>
+        <!-- fim modal de inclusão de marcas -->
+
+        <!-- inicio modal de visualização de detalhes de marca -->
+        <modal-component id="modalMarcaVisualizar" titulo="Visualizar marca">
+            <template v-slot:alertas></template>
+            <template v-slot:conteudo>Teste</template>
+            <template v-slot:rodape>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                >
+                    Fechar
+                </button>
+            </template>
+        </modal-component>
+        <!-- fim modal de visualização de detalhes de marca -->
     </div>
 </template>
 
