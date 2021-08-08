@@ -58,7 +58,11 @@
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
                         <table-component
-                            :visualizar="{visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaVisualizar'}"
+                            :visualizar="{
+                                visivel: true,
+                                dataToggle: 'modal',
+                                dataTarget: '#modalMarcaVisualizar'
+                            }"
                             :atualizar="true"
                             :remover="true"
                             :dados="marcas.data"
