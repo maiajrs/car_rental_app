@@ -58,6 +58,9 @@
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
                         <table-component
+                            :visualizar="false"
+                            :atualizar="false"
+                            :remover="false"
                             :dados="marcas.data"
                             :titulos="{
                                 id: { titulo: 'ID', tipo: 'texto' },
@@ -194,8 +197,8 @@ export default {
     data() {
         return {
             baseURL: "http://localhost:8000/api/v1/marca",
-            urlPaginacao: '',
-            urlFiltro: '',
+            urlPaginacao: "",
+            urlFiltro: "",
             nomeMarca: "",
             arquivoImagem: [],
             transacaoStatus: "",
@@ -220,23 +223,23 @@ export default {
                 }
             }
 
-            if (filtro != '') {
-                this.urlPaginacao = 'page=1'
-                this.urlFiltro = '&filtro='+filtro
+            if (filtro != "") {
+                this.urlPaginacao = "page=1";
+                this.urlFiltro = "&filtro=" + filtro;
             } else {
-                this.urlFiltro = ''
+                this.urlFiltro = "";
             }
-            this.carregarLista()
+            this.carregarLista();
         },
         paginacao(l) {
-            let url = l.url.split('?')[1]
-            this.urlPaginacao = url
+            let url = l.url.split("?")[1];
+            this.urlPaginacao = url;
             if (l.url) {
                 this.carregarLista();
             }
         },
         carregarLista() {
-            let url = this.baseURL + '?' + this.urlPaginacao + this.urlFiltro
+            let url = this.baseURL + "?" + this.urlPaginacao + this.urlFiltro;
             let config = {
                 headers: {
                     Accept: "application/json",
