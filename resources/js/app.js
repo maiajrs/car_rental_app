@@ -4,21 +4,21 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
-window.Vue = require('vue').default;
+window.Vue = require("vue").default;
 
-import Vue from 'vue'
+import Vue from "vue";
 
-import Vuex from 'Vuex'
+import Vuex from "Vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        teste: 'Teste de recuperação de valor da Store do Vue'
+        item: {}
     }
-})
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,16 +31,25 @@ const store = new Vuex.Store({
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('login-component', require('./components/Login.vue').default);
-Vue.component('home-component', require('./components/Home.vue').default);
-Vue.component('marcas-component', require('./components/Marcas.vue').default);
-Vue.component('input-container-component', require('./components/InputContainer.vue').default);
-Vue.component('table-component', require('./components/Table.vue').default);
-Vue.component('card-component', require('./components/Card.vue').default);
-Vue.component('modal-component', require('./components/Modal.vue').default);
-Vue.component('alert-component', require('./components/Alert.vue').default);
-Vue.component('paginate-component', require('./components/Paginate.vue').default);
+Vue.component(
+    "example-component",
+    require("./components/ExampleComponent.vue").default
+);
+Vue.component("login-component", require("./components/Login.vue").default);
+Vue.component("home-component", require("./components/Home.vue").default);
+Vue.component("marcas-component", require("./components/Marcas.vue").default);
+Vue.component(
+    "input-container-component",
+    require("./components/InputContainer.vue").default
+);
+Vue.component("table-component", require("./components/Table.vue").default);
+Vue.component("card-component", require("./components/Card.vue").default);
+Vue.component("modal-component", require("./components/Modal.vue").default);
+Vue.component("alert-component", require("./components/Alert.vue").default);
+Vue.component(
+    "paginate-component",
+    require("./components/Paginate.vue").default
+);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -49,6 +58,6 @@ Vue.component('paginate-component', require('./components/Paginate.vue').default
  */
 
 const app = new Vue({
-    el: '#app',
+    el: "#app",
     store
 });
