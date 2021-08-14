@@ -58,6 +58,13 @@
                 <card-component titulo="Listagem de Marcas">
                     <template v-slot:conteudo>
                         <table-component
+                            :visualizar="{
+                                visivel: true,
+                                dataToggle: 'modal',
+                                dataTarget: '#modalMarcaVisualizar'
+                            }"
+                            :atualizar="true"
+                            :remover="true"
                             :dados="marcas.data"
                             :titulos="{
                                 id: { titulo: 'ID', tipo: 'texto' },
@@ -108,6 +115,7 @@
                 </card-component>
             </div>
         </div>
+        <!-- inicio modal de inclusão de marcas -->
         <modal-component id="modalMarcas" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component
@@ -175,6 +183,23 @@
                 </button>
             </template>
         </modal-component>
+        <!-- fim modal de inclusão de marcas -->
+
+        <!-- inicio modal de visualização de detalhes de marca -->
+        <modal-component id="modalMarcaVisualizar" titulo="Visualizar marca">
+            <template v-slot:alertas></template>
+            <template v-slot:conteudo>Teste</template>
+            <template v-slot:rodape>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                >
+                    Fechar
+                </button>
+            </template>
+        </modal-component>
+        <!-- fim modal de visualização de detalhes de marca -->
     </div>
 </template>
 
@@ -194,8 +219,8 @@ export default {
     data() {
         return {
             baseURL: "http://localhost:8000/api/v1/marca",
-            urlPaginacao: '',
-            urlFiltro: '',
+            urlPaginacao: "",
+            urlFiltro: "",
             nomeMarca: "",
             arquivoImagem: [],
             transacaoStatus: "",
@@ -220,23 +245,23 @@ export default {
                 }
             }
 
-            if (filtro != '') {
-                this.urlPaginacao = 'page=1'
-                this.urlFiltro = '&filtro='+filtro
+            if (filtro != "") {
+                this.urlPaginacao = "page=1";
+                this.urlFiltro = "&filtro=" + filtro;
             } else {
-                this.urlFiltro = ''
+                this.urlFiltro = "";
             }
-            this.carregarLista()
+            this.carregarLista();
         },
         paginacao(l) {
-            let url = l.url.split('?')[1]
-            this.urlPaginacao = url
+            let url = l.url.split("?")[1];
+            this.urlPaginacao = url;
             if (l.url) {
                 this.carregarLista();
             }
         },
         carregarLista() {
-            let url = this.baseURL + '?' + this.urlPaginacao + this.urlFiltro
+            let url = this.baseURL + "?" + this.urlPaginacao + this.urlFiltro;
             let config = {
                 headers: {
                     Accept: "application/json",
