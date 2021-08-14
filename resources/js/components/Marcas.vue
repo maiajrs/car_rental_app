@@ -235,6 +235,7 @@
             </template>
         </modal-component>
         <!-- fim modal de visualização de detalhes de marca -->
+
          <!-- inicio modal de remoção de marca -->
         <modal-component id="modalMarcaRemover" titulo="Deletar marca">
             <template v-slot:alertas></template>
@@ -263,6 +264,14 @@
                     data-dismiss="modal"
                 >
                     Fechar
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-dismiss="modal"
+                    @click="remover()"
+                >
+                    Remover
                 </button>
             </template>
         </modal-component>
@@ -300,6 +309,30 @@ export default {
         };
     },
     methods: {
+        remover() {
+            const confirmacao = confirm('Tem certeza que deseja remover o registro?')
+            if (!confirmacao) return false
+
+            const url = `${this.baseURL}/${this.$store.state.item.id}`
+            const formData = new FormData()
+            formData.append('_method', 'delete')
+            const config = {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: this.token
+                }
+            }
+
+            axios.post(url, formData, config)
+                .then(response => {
+                    this.carregarLista()
+                    console.log(response.data)
+                })
+
+                .catch(errors => {
+                    console.log(errors.response.data)
+                })
+        },
         pesquisar() {
             let filtro = "";
 
