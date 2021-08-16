@@ -63,7 +63,11 @@
                                 dataToggle: 'modal',
                                 dataTarget: '#modalMarcaVisualizar'
                             }"
-                            :atualizar="true"
+                            :atualizar="{
+                                visivel: true,
+                                dataToggle: 'modal',
+                                dataTarget: '#modalMarcaAtualizar'
+                            }"
                             :remover="{
                                 visivel: true,
                                 dataToggle: 'modal',
@@ -236,6 +240,74 @@
         </modal-component>
         <!-- fim modal de visualização de detalhes de marca -->
 
+        <!-- inicio modal de atualização de marcas -->
+        <modal-component id="modalMarcaAtualizar" titulo="Adicionar marca">
+            <template v-slot:alertas>
+                <alert-component
+                    :detalhes="transacaoDetalhes"
+                    titulo="O registro foi inserido com sucesso"
+                    tipo="success"
+                    v-if="transacaoStatus == 'adicionado'"
+                ></alert-component>
+                <alert-component
+                    :detalhes="transacaoDetalhes"
+                    titulo="Um erro ocorreu ao fazer o registro"
+                    tipo="danger"
+                    v-if="transacaoStatus == 'erro'"
+                ></alert-component>
+            </template>
+
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <input-container-component
+                        id="atualizarNome"
+                        titulo="Nome da marca"
+                        id-help="atualizarNomeHelp"
+                        text-help="Informe o nome da marca."
+                    >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="atualizarNome"
+                            aria-describedby="atualizarNomeHelp"
+                            placeholder="Nome da marca"
+                            v-model="nomeMarca"
+                        />
+                    </input-container-component>
+                </div>
+                <div class="form-group">
+                    <input-container-component
+                        id="atualizarImagem"
+                        titulo="Imagem"
+                        id-help="atualizarImagemHelp"
+                        text-help="Selecione uma imagem no formato PNG."
+                    >
+                        <input
+                            type="file"
+                            class="form-control-file"
+                            id="atualizarImagem"
+                            aria-describedby="atualizarImagemHelp"
+                            placeholder="Selecione uma imagem"
+                            @change="carregarImagem($event)"
+                        />
+                    </input-container-component>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                >
+                    Fechar
+                </button>
+                <button type="button" class="btn btn-primary" @click="atualizar()">
+                    Atualizar
+                </button>
+            </template>
+        </modal-component>
+        <!-- fim modal de atualização de marcas -->
+
         <!-- inicio modal de remoção de marca -->
         <modal-component id="modalMarcaRemover" titulo="Deletar marca">
             <template v-slot:alertas>
@@ -327,6 +399,9 @@ export default {
         };
     },
     methods: {
+        atualizar() {
+            console.log(this.$store.state.item)
+        },
         remover() {
             const confirmacao = confirm(
                 "Tem certeza que deseja remover o registro?"
