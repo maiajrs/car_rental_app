@@ -156,7 +156,6 @@
                             placeholder="Nome da marca"
                             v-model="nomeMarca"
                         />
-                        {{ nomeMarca }}
                     </input-container-component>
                 </div>
                 <div class="form-group">
@@ -174,7 +173,6 @@
                             placeholder="Selecione uma imagem"
                             @change="carregarImagem($event)"
                         />
-                        {{ arquivoImagem[0] }}
                     </input-container-component>
                 </div>
             </template>
@@ -271,7 +269,7 @@
                             id="atualizarNome"
                             aria-describedby="atualizarNomeHelp"
                             placeholder="Nome da marca"
-                            v-model="nomeMarca"
+                            v-model="$store.state.item.nome"
                         />
                     </input-container-component>
                 </div>
@@ -400,7 +398,30 @@ export default {
     },
     methods: {
         atualizar() {
-            console.log(this.$store.state.item)
+
+            const url = this.baseURL + '/' + this.$store.state.item.id
+
+            const formData = new FormData()
+            formData.append('_method','PATCH')
+            formData.append('nome', this.$store.state.item.nome)
+            formData.append('imagem', this.arquivoImagem[0])
+
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Accept: 'application/json',
+                    Authorization: this.token
+                }
+            }
+
+            axios.post(url, formData, config)
+                .then(response => {
+                    console.log('Atualizado com sucesso', response)
+                    this.carregarLista()
+                })
+                .catch(errros => {
+                    console.log(errros)
+                })
         },
         remover() {
             const confirmacao = confirm(
@@ -411,6 +432,7 @@ export default {
             const url = `${this.baseURL}/${this.$store.state.item.id}`;
             const formData = new FormData();
             formData.append("_method", "delete");
+
             const config = {
                 headers: {
                     Accept: "application/json",
