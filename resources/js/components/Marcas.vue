@@ -156,7 +156,6 @@
                             placeholder="Nome da marca"
                             v-model="nomeMarca"
                         />
-                        {{ nomeMarca }}
                     </input-container-component>
                 </div>
                 <div class="form-group">
@@ -174,7 +173,6 @@
                             placeholder="Selecione uma imagem"
                             @change="carregarImagem($event)"
                         />
-                        {{ arquivoImagem[0] }}
                     </input-container-component>
                 </div>
             </template>
@@ -244,16 +242,16 @@
         <modal-component id="modalMarcaAtualizar" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component
-                    :detalhes="transacaoDetalhes"
-                    titulo="O registro foi inserido com sucesso"
+                    :detalhes="$store.state.transacao"
+                    titulo="O registro foi atualizado com sucesso"
                     tipo="success"
-                    v-if="transacaoStatus == 'adicionado'"
+                    v-if="$store.state.transacao.status === 'sucesso'"
                 ></alert-component>
                 <alert-component
-                    :detalhes="transacaoDetalhes"
+                    :detalhes="$store.state.transacao"
                     titulo="Um erro ocorreu ao fazer o registro"
                     tipo="danger"
-                    v-if="transacaoStatus == 'erro'"
+                    v-if="$store.state.transacao.status === 'erro'"
                 ></alert-component>
             </template>
 
@@ -271,7 +269,7 @@
                             id="atualizarNome"
                             aria-describedby="atualizarNomeHelp"
                             placeholder="Nome da marca"
-                            v-model="nomeMarca"
+                            v-model="$store.state.item.nome"
                         />
                     </input-container-component>
                 </div>
@@ -301,7 +299,11 @@
                 >
                     Fechar
                 </button>
-                <button type="button" class="btn btn-primary" @click="atualizar()">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="atualizar()"
+                >
                     Atualizar
                 </button>
             </template>
@@ -400,7 +402,38 @@ export default {
     },
     methods: {
         atualizar() {
-            console.log(this.$store.state.item)
+            const url = this.baseURL + "/" + this.$store.state.item.id;
+
+            const formData = new FormData();
+            formData.append("_method", "PATCH");
+            formData.append("nome", this.$store.state.item.nome);
+
+            if (this.arquivoImagem[0]) {
+                formData.append("imagem", this.arquivoImagem[0]);
+            }
+
+            const config = {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Accept: "application/json",
+                    Authorization: this.token
+                }
+            };
+
+            axios
+                .post(url, formData, config)
+                .then(response => {
+                    atualizarImagem.value = ''
+                    this.$store.state.transacao.status = "sucesso";
+                    this.$store.state.transacao.message = "O registro de marca foi atualizado com sucesso";
+                    this.carregarLista();
+                })
+                .catch(erros => {
+                    this.$store.state.transacao.status = "erro";
+                    this.$store.state.transacao.message = erros.response.data.message;
+                    this.$store.state.transacao.dados =
+                        erros.response.data.errors;
+                });
         },
         remover() {
             const confirmacao = confirm(
@@ -411,6 +444,7 @@ export default {
             const url = `${this.baseURL}/${this.$store.state.item.id}`;
             const formData = new FormData();
             formData.append("_method", "delete");
+
             const config = {
                 headers: {
                     Accept: "application/json",
@@ -500,7 +534,6 @@ export default {
                     this.transacaoDetalhes = {
                         message: "ID do registro inserido: " + res.data.id
                     };
-                    console.log(res.data.id);
                 })
                 .catch(errors => {
                     this.transacaoStatus = "erro";
