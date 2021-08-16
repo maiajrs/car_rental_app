@@ -299,7 +299,11 @@
                 >
                     Fechar
                 </button>
-                <button type="button" class="btn btn-primary" @click="atualizar()">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="atualizar()"
+                >
                     Atualizar
                 </button>
             </template>
@@ -398,30 +402,34 @@ export default {
     },
     methods: {
         atualizar() {
+            const url = this.baseURL + "/" + this.$store.state.item.id;
 
-            const url = this.baseURL + '/' + this.$store.state.item.id
+            const formData = new FormData();
+            formData.append("_method", "PATCH");
+            formData.append("nome", this.$store.state.item.nome);
 
-            const formData = new FormData()
-            formData.append('_method','PATCH')
-            formData.append('nome', this.$store.state.item.nome)
-            formData.append('imagem', this.arquivoImagem[0])
+            if (this.arquivoImagem[0]) {
+                formData.append("imagem", this.arquivoImagem[0]);
+            }
 
             const config = {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Accept: 'application/json',
+                    "Content-Type": "multipart/form-data",
+                    Accept: "application/json",
                     Authorization: this.token
                 }
-            }
+            };
 
-            axios.post(url, formData, config)
+            axios
+                .post(url, formData, config)
                 .then(response => {
-                    console.log('Atualizado com sucesso', response)
-                    this.carregarLista()
+                    atualizarImagem.value = ''
+                    console.log("Atualizado com sucesso", response);
+                    this.carregarLista();
                 })
                 .catch(errros => {
-                    console.log(errros)
-                })
+                    console.log(errros);
+                });
         },
         remover() {
             const confirmacao = confirm(
