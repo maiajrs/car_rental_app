@@ -242,16 +242,16 @@
         <modal-component id="modalMarcaAtualizar" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component
-                    :detalhes="transacaoDetalhes"
-                    titulo="O registro foi inserido com sucesso"
+                    :detalhes="$store.state.transacao"
+                    titulo="O registro foi atualizado com sucesso"
                     tipo="success"
-                    v-if="transacaoStatus == 'adicionado'"
+                    v-if="$store.state.transacao.status === 'sucesso'"
                 ></alert-component>
                 <alert-component
-                    :detalhes="transacaoDetalhes"
+                    :detalhes="$store.state.transacao"
                     titulo="Um erro ocorreu ao fazer o registro"
                     tipo="danger"
-                    v-if="transacaoStatus == 'erro'"
+                    v-if="$store.state.transacao.status === 'erro'"
                 ></alert-component>
             </template>
 
@@ -424,11 +424,15 @@ export default {
                 .post(url, formData, config)
                 .then(response => {
                     atualizarImagem.value = ''
-                    console.log("Atualizado com sucesso", response);
+                    this.$store.state.transacao.status = "sucesso";
+                    this.$store.state.transacao.message = "O registro de marca foi atualizado com sucesso";
                     this.carregarLista();
                 })
-                .catch(errros => {
-                    console.log(errros);
+                .catch(erros => {
+                    this.$store.state.transacao.status = "erro";
+                    this.$store.state.transacao.message = erros.response.data.message;
+                    this.$store.state.transacao.dados =
+                        erros.response.data.errors;
                 });
         },
         remover() {
@@ -530,7 +534,6 @@ export default {
                     this.transacaoDetalhes = {
                         message: "ID do registro inserido: " + res.data.id
                     };
-                    console.log(res.data.id);
                 })
                 .catch(errors => {
                     this.transacaoStatus = "erro";
