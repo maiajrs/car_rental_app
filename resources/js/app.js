@@ -14,6 +14,19 @@ import Vuex from "Vuex";
 
 Vue.use(Vuex);
 
+Vue.filter('formataDataTempoGlobal', function(d) {
+    if (!d) return ''
+    let data = d.split("T")
+    let tempo = data[1].split('.')
+    console.log(tempo)
+    data = data[0].split("-")
+
+    data = data[2] + '/' + data[1] + '/' + data[0]
+
+    return data + ' ' + tempo[0]
+
+})
+
 const store = new Vuex.Store({
     state: {
         item: {},
