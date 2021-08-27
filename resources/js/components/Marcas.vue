@@ -373,17 +373,6 @@
 import Alert from "./Alert.vue";
 export default {
     components: { Alert },
-    computed: {
-        token() {
-            let token = document.cookie.split(";").find(indice => {
-                if (indice.includes("token=")) {
-                    return indice;
-                }
-            });
-            token = "Bearer " + token?.replace("token=", "");
-            return token;
-        }
-    },
     data() {
         return {
             baseURL: "http://localhost:8000/api/v1/marca",
@@ -415,8 +404,6 @@ export default {
             const config = {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    Accept: "application/json",
-                    Authorization: this.token
                 }
             };
 
@@ -445,15 +432,9 @@ export default {
             const formData = new FormData();
             formData.append("_method", "delete");
 
-            const config = {
-                headers: {
-                    Accept: "application/json",
-                    Authorization: this.token
-                }
-            };
             this.$store.state.transacao.status = "erros";
             axios
-                .post(url, formData, config)
+                .post(url, formData)
                 .then(response => {
                     this.carregarLista();
                     this.$store.state.transacao.status = "sucesso";
@@ -497,7 +478,6 @@ export default {
             let url = this.baseURL + "?" + this.urlPaginacao + this.urlFiltro;
             let config = {
                 headers: {
-                    Accept: "application/json",
                     Authorization: this.token
                 }
             };
@@ -522,8 +502,6 @@ export default {
             let configs = {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    Accept: "application/json",
-                    Authorization: this.token
                 }
             };
 
